@@ -1,8 +1,9 @@
 describe('Basic user flow for Website', () => {
   // First, visit the lab 8 website
   beforeAll(async () => {
-    await page.goto('https://cse110-f2021.github.io/Lab8_Website');
+    await page.goto('http://127.0.0.1:5500/index.html');
   });
+  //https://cse110-f2021.github.io/Lab8_Website
 
   // Next, check to make sure that all 20 <product-item> elements have loaded
   it('Initial Home Page - Check for 20 product items', async () => {
@@ -25,15 +26,18 @@ describe('Basic user flow for Website', () => {
     const prodItems = await page.$$('product-item');
     console.log(`Checking product item 1/${prodItems.length}`);
     // Grab the .data property of <product-items> to grab all of the json data stored inside
-    data = await prodItems[0].getProperty('data');
+    //STARING HERE
+    for (var i = 0; i < prodItems.length; i++) {
+      data = await prodItems[i].getProperty('data');
     // Convert that property to JSON
-    plainValue = await data.jsonValue();
+      plainValue = await data.jsonValue();
     // Make sure the title, price, and image are populated in the JSON
-    if (plainValue.title.length == 0) { allArePopulated = false; }
-    if (plainValue.price.length == 0) { allArePopulated = false; }
-    if (plainValue.image.length == 0) { allArePopulated = false; }
+      if (plainValue.title.length == 0) { allArePopulated = false; }
+      if (plainValue.price.length == 0) { allArePopulated = false; }
+      if (plainValue.image.length == 0) { allArePopulated = false; }
     // Expect allArePopulated to still be true
-    expect(allArePopulated).toBe(true);
+      expect(allArePopulated).toBe(true);
+    }
 
     // TODO - Step 1
     // Right now this function is only checking the first <product-item> it found, make it so that
@@ -45,6 +49,9 @@ describe('Basic user flow for Website', () => {
   // the button swaps to "Remove from Cart"
   it('Clicking the "Add to Cart" button should change button text', async () => {
     console.log('Checking the "Add to Cart" button...');
+    const item = await page.$('product-item');
+    const button_handler = await item.shadowRoot.querySelector('button');
+    let innerText = await button_handler.getProperty('innerText');
     // TODO - Step 2
     // Query a <product-item> element using puppeteer ( checkout page.$() and page.$$() in the docs )
     // Grab the shadowRoot of that element (it's a property), then query a button from that shadowRoot.
