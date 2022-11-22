@@ -4,7 +4,6 @@ describe('Basic user flow for Website', () => {
     await page.goto('http://127.0.0.1:5500/index.html');
   });
   //https://cse110-f2021.github.io/Lab8_Website
-
   // Next, check to make sure that all 20 <product-item> elements have loaded
   it('Initial Home Page - Check for 20 product items', async () => {
     console.log('Checking for 20 product items...');
@@ -170,4 +169,5 @@ describe('Basic user flow for Website', () => {
     // TODO - Step 8
     // At this point the item 'cart' in localStorage should be '[]', check to make sure it is
   });
+  
 });
