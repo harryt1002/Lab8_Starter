@@ -27,7 +27,7 @@ describe('Basic user flow for Website', () => {
     console.log(`Checking product item 1/${prodItems.length}`);
     // Grab the .data property of <product-items> to grab all of the json data stored inside
     //STARING HERE
-    for (var i = 0; i < prodItems.length; i++) {
+    for (let i = 0; i < prodItems.length; i++) {
       data = await prodItems[i].getProperty('data');
     // Convert that property to JSON
       plainValue = await data.jsonValue();
@@ -52,6 +52,8 @@ describe('Basic user flow for Website', () => {
     const item = await page.$('product-item');
     const button_handler = await item.shadowRoot.querySelector('button');
     let innerText = await button_handler.getProperty('innerText');
+    let textValue = await innerText.jsonValue();
+    console.log(textValue);
     // TODO - Step 2
     // Query a <product-item> element using puppeteer ( checkout page.$() and page.$$() in the docs )
     // Grab the shadowRoot of that element (it's a property), then query a button from that shadowRoot.
@@ -63,6 +65,18 @@ describe('Basic user flow for Website', () => {
   // number in the top right has been correctly updated
   it('Checking number of items in cart on screen', async () => {
     console.log('Checking number of items in cart on screen...');
+    let prodElem = await page.$$('product-item');
+    for (let i = 0; i < prodElem.length; i++) {
+      const button_handler = await prodElem[i].shadowRoot.querySelector('button');
+      let innerText = await button_handler.getProperty('innerText');
+      let textValue = await innerText.jsonValue();
+    }
+    const cartCT = document.querySelector('#cart-count');
+    let cartInnerText = await cartCT.getProperty('innerText');
+    let cartTextValue = await cartInnerText.jsonValue();
+    if (cartTextValue == 20) {
+      console.log(cartTextValue);
+    }
     // TODO - Step 3
     // Query select all of the <product-item> elements, then for every single product element
     // get the shadowRoot and query select the button inside, and click on it.
@@ -72,6 +86,21 @@ describe('Basic user flow for Website', () => {
   // Check to make sure that after you reload the page it remembers all of the items in your cart
   it('Checking number of items in cart on screen after reload', async () => {
     console.log('Checking number of items in cart on screen after reload...');
+    let prodElem = await page.$$('product-item');
+    for (let i = 0; i < prodElem.length; i++) {
+      const button_handler = await prodElem[i].shadowRoot.querySelector('button');
+      let innerText = await button_handler.getProperty('innerText');
+      let textValue = await innerText.jsonValue();
+      if (textValue == "Remove from Cart") {
+        console.log(textValue);
+      }
+    }
+    const cartCT = document.querySelector('#cart-count');
+    let cartInnerText = await cartCT.getProperty('innerText');
+    let cartTextValue = await cartInnerText.jsonValue();
+    if (cartTextValue == 20) {
+      console.log(cartTextValue);
+    }
     // TODO - Step 4
     // Reload the page, then select all of the <product-item> elements, and check every
     // element to make sure that all of their buttons say "Remove from Cart".
@@ -80,8 +109,12 @@ describe('Basic user flow for Website', () => {
 
   // Check to make sure that the cart in localStorage is what you expect
   it('Checking the localStorage to make sure cart is correct', async () => {
+    let cartItem = localStorage.getItem('cart');
+    if (JSON.parse(cartItem) == "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]") {
+      console.log("cart is what is expected");
+    }
     // TODO - Step 5
-    // At this point he item 'cart' in localStorage should be 
+    // At this point the item 'cart' in localStorage should be 
     // '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]', check to make sure it is
   });
 
@@ -89,6 +122,12 @@ describe('Basic user flow for Website', () => {
   // number in the top right of the screen is 0
   it('Checking number of items in cart on screen after removing from cart', async () => {
     console.log('Checking number of items in cart on screen...');
+    const cartCT = document.querySelector('#cart-count');
+    let cartInnerText = await cartCT.getProperty('innerText');
+    let cartTextValue = await cartInnerText.jsonValue();
+    if (cartTextValue == 0) {
+      console.log("cart is empty");
+    }
     // TODO - Step 6
     // Go through and click "Remove from Cart" on every single <product-item>, just like above.
     // Once you have, check to make sure that #cart-count is now 0
@@ -98,6 +137,22 @@ describe('Basic user flow for Website', () => {
   // after we refresh the page
   it('Checking number of items in cart on screen after reload', async () => {
     console.log('Checking number of items in cart on screen after reload...');
+    console.log('Checking number of items in cart on screen after reload...');
+    let prodElem = await page.$$('product-item');
+    for (let i = 0; i < prodElem.length; i++) {
+      const button_handler = await prodElem[i].shadowRoot.querySelector('button');
+      let innerText = await button_handler.getProperty('innerText');
+      let textValue = await innerText.jsonValue();
+      if (textValue == "Add to Cart") {
+        console.log(textValue);
+      }
+    }
+    const cartCT = document.querySelector('#cart-count');
+    let cartInnerText = await cartCT.getProperty('innerText');
+    let cartTextValue = await cartInnerText.jsonValue();
+    if (cartTextValue == 0) {
+      console.log("cart empty");
+    }
     // TODO - Step 7
     // Reload the page once more, then go through each <product-item> to make sure that it has remembered nothing
     // is in the cart - do this by checking the text on the buttons so that they should say "Add to Cart".
@@ -108,7 +163,11 @@ describe('Basic user flow for Website', () => {
   // cart being empty
   it('Checking the localStorage to make sure cart is correct', async () => {
     console.log('Checking the localStorage...');
+    let cartItem = localStorage.getItem('cart');
+    if (JSON.parse(cartItem) == "[]") {
+      console.log("cart is what is expected");
+    }
     // TODO - Step 8
-    // At this point he item 'cart' in localStorage should be '[]', check to make sure it is
+    // At this point the item 'cart' in localStorage should be '[]', check to make sure it is
   });
 });
